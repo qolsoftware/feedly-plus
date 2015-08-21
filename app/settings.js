@@ -99,7 +99,7 @@ settings['feedlyplus_boldcat'] =
 	order : 1,
 	apply : function()
 	{
-		insertCss(this.id, '#feedlyTabs .feedTitle, #feedlyTabs div.label, #feedlyTabsHolder div.staticSimpleUnreadCount { color:black!important; font-weight:bold!important; opacity:1!important; }');
+		insertCss(this.id, '#feedlyTabs .feedTitle, #feedlyTabs div.label:not(.primary), #feedlyTabsHolder div.staticSimpleUnreadCount { color:black!important; font-weight:bold!important; opacity:1!important; }');
 	},
 	revert : function()
 	{
