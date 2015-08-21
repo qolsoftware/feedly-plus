@@ -1,0 +1,141 @@
+<html>
+
+<head>
+
+<style>
+body { 
+    font: normal 14px/20px arial, Helvetica; 
+}
+#main{
+    width:717px;
+    margin-left:50px;
+    margin-top:50px;
+}
+#title{
+    height:48px;
+    width:700px;
+    position: relative;
+    margin-bottom: 5px;
+}
+#title img{
+    float:left;
+}
+#word{
+    margin-left:21px;
+    float:left;
+    font-size:24px;
+    line-height: 48px;
+	font-weight: bold;
+}
+#versions {
+	padding-left: 30px;
+	padding-top:  30px;
+	padding-bottom:  20px;	
+}
+ul {
+	margin-top: 0px;
+	margin-bottom: 30px;
+}
+
+.version {
+	padding-right: 10px;
+	font-size: 1.2em;
+}
+</style>
+
+</head>
+
+<body>
+
+<div id="main">
+
+	<div id="title">
+	  <img src="icons/icon48.png"/>
+	  <span id="word">Feedly Plus - Version History</span>
+	</div>
+
+	<div id="versions">
+		<span class="version">0.2.8</span> (2014-12-13)
+		<ul>
+		  <li>Feedly's API for getting unread counts not working in HTTPS mode.  Disabling that for now.  HTTPS still works for everything else though.</li>
+		</ul>
+	
+		<span class="version">0.2.7</span> (2014-12-11)
+		<ul>
+		  <li>"Mark Previous as Read" fully working in Magazine view (no "undo" yet though).</li>
+		  <li>"Mark Previous as Read" works with Featured preference on.</li>
+		  <li>"Articles align left" everywhere, not just Title view.</li>
+		  <li>Lots of code optimizations.</li>
+		</ul>
+	
+		<span class="version">0.2.5</span> (2014-11-26)
+		<ul>
+		  <li>Updated manifest description.</li>
+		</ul>
+	
+		<span class="version">0.2.4</span> (2014-11-24)
+		<ul>
+		  <li>Added Version and Feedback options.</li>
+		</ul>
+	
+		<span class="version">0.2.3</span> (2014-11-22)
+		<ul>
+		  <li>Fixed "Title view articles align left" bug caused by latest Feedly update.</li>
+		</ul>
+		  
+		<span class="version">0.2.2</span> (2014-05-06)
+		<ul>
+		  <li>Fixed bugs caused by latest Feedly update.</li>
+		  <li>Removed "Remove category count link" option because Feedly has removed this annoying feature as well.</li>
+		</ul>
+
+		<span class="version">0.2.1</span> (2014-04-25)
+		<ul>
+		  <li>Fixed "Remove 'All' category" redirect to index page bug again.</li>
+		</ul>
+
+		<span class="version">0.2.0</span> (2014-04-25)
+		<ul>
+		  <li>New option: Use HTTPS.</li>
+		  <li>New option: Unread count in icon.</li>
+		  <li>New option: Use HTTPS.</li>
+		  <li>New option: Icon click opens Feedly first.  If Feedly is not open, clicking extension icon will open Feedly.  Subsequent clicks to extension icon will open the menu as usual.</li>
+		  <li>Fixed "Title view articles align left" option after last Feedly update.</li>
+		  <li>Fixed "Remove 'All' category" redirect to index page bug after last Feedly update.</li>
+		  <li>Removed "Faster giant mark as read button" option because Feedly has made the button fast now.</li>
+		  <li>Removed "Full width on all pages" option because Feedly now defaults to full width</li>
+		</ul>
+		  
+		<span class="version">0.1.4</span>  (2013-11-25)
+		<ul>
+		  <li>cloud.feedly.com is now just feedly.com.</li>
+		</ul>
+
+		<span class="version">0.1.3</span> (2013-11-11)</span>
+		<ul>
+		  <li>Fixed bug caused by Feedly changes.</li>
+		</ul>
+
+		<span class="version">0.1.2</span>  (2013-10-11)
+		<ul>
+		  <li>New option: Add unread count in tab title.</li>
+		  <li>Added 'undo' to mark previous as read feature.</li>
+		  <li>Fixed bug when logging out.</li>
+		</ul>
+
+		<span class="version">0.1.1</span>  (2013-10-03)
+		<ul>
+		  <li>New option: Faster giant mark as read button.</li>
+		</ul>
+
+		<span class="version">0.1.0</span>  (2013-09-28)
+		<ul>
+		  <li>First release.</li>
+		</ul>
+	</div>
+	
+</div>
+
+</body>
+
+</html>

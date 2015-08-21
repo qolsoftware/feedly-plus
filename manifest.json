@@ -1,0 +1,43 @@
+{
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": true
+  },
+  "browser_action": {
+    "default_icon": "icons/icon16.png",
+    "default_popup": "popup/popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://feedly.com/*", "https://feedly.com/*"],
+      "js": [
+	    "jquery-1.10.2.min.js",
+	    "markprevious.js",
+	    "settings.js",
+	    "settings.markprevious.js",
+		"settings.titleunread.js",
+	    "content_script.js"
+	  ],
+	  "css": ["content_script.css"]
+    }
+  ],
+  "description": "Enhance your Feedly experience.  With mark previous as read, unread counter in tab and icon, align articles left, etc.",
+  "icons": {
+    "128": "icons/icon128.png",
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png"
+  },
+  "manifest_version": 2,
+  "name": "Feedly Plus",
+  "permissions": [
+    "alarms",
+	"storage",
+	"tabs",
+	"webRequest",
+	"http://feedly.com/*",
+	"https://feedly.com/*"
+  ],
+  "version": "0.2.8",
+  "web_accessible_resources": ["loading.gif"]
+}
