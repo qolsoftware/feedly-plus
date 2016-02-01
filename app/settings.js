@@ -93,13 +93,30 @@ settings = {};
 settings['feedlyplus_boldcat'] =
 {
 	id : 'feedlyplus_boldcat',
-	label : 'Bold categories',
+	label : 'Bold categories & counts',
 	description : 'Bold categories on left for easier reading.',
 	volatile : false,
 	order : 1,
 	apply : function()
 	{
-		insertCss(this.id, '#feedlyTabs .feedTitle, #feedlyTabs div.label:not(.primary), #feedlyTabsHolder div.staticSimpleUnreadCount { color:black!important; font-weight:bold!important; opacity:1!important; }');
+		insertCss(this.id, '#feedlyTabs div.emptyAware:not(.primary), #feedlyTabsHolder div.staticSimpleUnreadCount { font-weight:bold!important; }');
+	},
+	revert : function()
+	{
+		removeStyle(this.id);
+	}
+};
+
+settings['feedlyplus_blackcat'] =
+{
+	id : 'feedlyplus_blackcat',
+	label : 'Black categories & counts',
+	description : 'Black categories on left for easier reading.',
+	volatile : false,
+	order : 1,
+	apply : function()
+	{
+		insertCss(this.id, '#feedlyTabs div.emptyAware:not(.primary), #feedlyTabsHolder div.staticSimpleUnreadCount { color:black!important; opacity:1!important; }');
 	},
 	revert : function()
 	{
@@ -204,6 +221,37 @@ settings['feedlyplus_usehttps'] =
 	},
 	revert : function()
 	{
+	}
+};
+
+settings['feedlyplus_4cards'] =
+{
+	id : 'feedlyplus_4cards',
+	label : 'Cards view to 4 columns',
+	description : 'Expand Cards view from 3 to 4 columns.',
+	volatile : true,
+	order : 12,
+	apply : function()
+	{
+		this.insert4Columns();
+
+		this.mutationObserver.observe(document.querySelector('#feedlyPart0'), {childList : true, subtree : true});
+	},
+	revert : function()
+	{
+		removeStyle(this.id);
+		this.mutationObserver.disconnect();
+	},
+	mutationObserver : new MutationObserver(function(mutations)
+	{
+		settings['feedlyplus_4cards'].insert4Columns();
+	}),
+	insert4Columns : function()
+	{
+		if (document.querySelector("#mainArea .u5EntryList"))
+		{
+			insertCss(this.id, '#feedlyPage {width:1200px !important;}');
+		}
 	}
 };
 
