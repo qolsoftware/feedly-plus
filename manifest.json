@@ -21,7 +21,7 @@
 	  "css": ["app/content_script.css"]
     }
   ],
-  "description": "Enhance your Feedly experience.  With mark previous as read, unread counter in tab and icon, align articles left, etc.",
+  "description": "Mark previous as read, unread counter in tab & icon, align articles left, bold categories, cards view 4 columns.",
   "icons": {
     "128": "app/icons/icon128.png",
     "16": "app/icons/icon16.png",
@@ -38,6 +38,6 @@
 	"http://feedly.com/*",
 	"https://feedly.com/*"
   ],
-  "version": "0.3.0",
+  "version": "0.3.1",
   "web_accessible_resources": ["app/loading.gif"]
 }

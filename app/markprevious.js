@@ -14,7 +14,7 @@ function getPreviousUnread(articleId)
 	var unreadSelector = 'a.title.unread';
 	
 	var stop = false;
-	var previous = $('div#mainArea div.u4Entry, div#mainArea div.u0Entry, div#mainArea div.topRecommendedEntry').filter(function(index, element)
+	var previous = $('div#mainArea div.u4Entry, div#mainArea div.u5Entry, div#mainArea div.u0Entry, div#mainArea div.topRecommendedEntry').filter(function(index, element)
 	{
 		var jElem = $(element);
 
@@ -37,17 +37,7 @@ function getPreviousUnread(articleId)
 	return previous;
 }
 
-function markAsRead(articles)
-{
-	markAs(articles, true);
-}
-
-function markAsUnread(articles)
-{
-	markAs(articles, false);
-}
-
-function markAs(articles, read)
+function markAs(articles, read, callbackStack)
 {
 	//console.log('**** MarkAs: ' + articles.length);
 
@@ -60,30 +50,104 @@ function markAs(articles, read)
 		articles = $(articles.get().reverse());
 	}
 	
+	var view = getCurrentView();
+
+	var time = 0;
+	
+	//2016-02-29 - Feedly or maybe even Chrome  made an update where clicking the article was happening
+	//too fast and not registering the events.  So here we add a 1 millisecond delay.
+	var timeIncrement = 1;
+
 	articles.each(function()
 	{
-		clickArticle($(this));
-
+		time += timeIncrement;
+		
+		var article = $(this);
+		setTimeout
+		(
+			function() 
+			{
+				clickArticle(article, view);
+			}, 
+			time
+		);
+		
 		if (!read)
 		{
-			$("span[data-page-entry-action='keepEntryAsUnread']").click();
+			time += timeIncrement;
+			
+			setTimeout
+			(
+				function() 
+				{
+					$("span[data-page-entry-action='keepEntryAsUnread']").click();
+				}, 
+				time
+			);			
 		}
 	});
+	
+	if (callbackStack)
+	{
+		while((c = callbackStack.pop()) != null)
+		{
+			time += timeIncrement;
+			setTimeout(c, time);
+		}		
+	}
 }
+
 
 function getCurrentView()
 {
 	var timeline = $('#timeline');
-	return timeline.hasClass('u0EntryList') ? 'title' : timeline.hasClass('u4EntryList') ? 'magazine' : 'unknown';
+	
+	if (timeline.hasClass('u0EntryList'))
+	{
+		return 'title';
+	}
+	else if (timeline.hasClass('u4EntryList'))
+	{
+		return 'magazine';
+	}
+	else if (timeline.hasClass('u5EntryList'))
+	{
+		return 'cards';
+	}
+	return 'unknown';
 }
 
-function clickArticle(element)
+function clickArticle(element, view)
 {
-	//This function used to do more until we found a simpler way to click
-	//articles.  But still good to leave the click abstracted out because
-	//multiple functions call this.
-	element.find('span:first').click();
+	if (view == null)
+	{
+		view = getCurrentView();
+	}
+	
+	if (view == 'cards')
+	{
+		var anchor = element.find("a.unread:first");
+		
+		//To get around something in Feedly (like React.js?) we have to first inject a span
+		//and then click the span.  Otherwise we can't programmatically click the anchor.
+		var tempSpan = $('<span></span>');
+		anchor.prepend(tempSpan);		
+		tempSpan.click();
+	}
+	else
+	{
+		//console.log('**** Clicking: ' + element.find('span:first'));
+		element.find('span:first').trigger('click');
+	}
 }
+
+
+function sleepFor( sleepDuration )
+{
+    var now = new Date().getTime();
+    while(new Date().getTime() < now + sleepDuration){ /* do nothing */ } 
+}
+
 
 function getOpenArticle()
 {

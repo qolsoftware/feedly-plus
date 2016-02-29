@@ -88,7 +88,7 @@ function init()
 		});
 	});
 	
-	$('#moreLinks').append('<li title="See what\'s new in this version."><a id="' + chrome.extension.getURL("") + 'version.html"><label>Version: ' + chrome.app.getDetails().version + '</label></a></li>');
+	$('#moreLinks').append('<li title="See what\'s new in this version."><a id="' + chrome.extension.getURL("") + 'app/version.html"><label>Version: ' + chrome.app.getDetails().version + '</label></a></li>');
 	$('#moreLinks').append('<li title="Send us feedback!"><a id="mailto:qolsoftware@gmail.com?subject=Feedly%20Plus"><label>qolsoftware@gmail.com</label></a></li>');
 	
 	$('#moreLinks a').click(function()

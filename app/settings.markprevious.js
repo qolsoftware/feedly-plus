@@ -10,16 +10,22 @@ settings['feedlyplus_markprevious'] =
 	apply : function()
 	{
 		document.addEventListener('keypress', this.handleKeyPress);
-		this.mutationObserver.observe(document.querySelector('#feedlyPart0'), {childList : true, subtree : true});
-		this.magazineObserver.observe(document.querySelector('#feedlyPart0'), {childList : true, subtree : true});
+		this.titleViewObserver.observe(document.querySelector('#feedlyPart0'), {childList : true, subtree : true});
+		this.magazineViewObserver.observe(document.querySelector('#feedlyPart0'), {childList : true, subtree : true});
+		this.cardsViewObserver.observe(document.querySelector('#feedlyPart0'), {childList : true, subtree : true});
 		this.createArticleMarkPreviousLink();
+		
+		insertCss(this.id, 'div.u5Entry { height:auto!important; }');
 	},
 	revert : function()
 	{
 		document.removeEventListener('keypress', this.handleKeyPress);
-		this.mutationObserver.disconnect();
-		this.magazineObserver.disconnect();
+		this.titleViewObserver.disconnect();
+		this.magazineViewObserver.disconnect();
+		this.cardsViewObserver.disconnect();
 		$('#feedlyplus_markpreviouslink').remove();
+		
+		removeStyle(this.id);
 	},
 	handleKeyPress : function(e)
 	{
@@ -36,14 +42,14 @@ settings['feedlyplus_markprevious'] =
 			$('#feedlyplus_markpreviouslink .action').click();
 		}
 	},
-	mutationObserver : new MutationObserver(function(mutations)
+	titleViewObserver : new MutationObserver(function(mutations)
 	{
 		if (findAddedNode(mutations, function(n) { return n.id && n.id.match("_inlineframe$");}) != null)
 		{
 			settings['feedlyplus_markprevious'].createArticleMarkPreviousLink();
 		}
 	}),
-	magazineObserver : new MutationObserver(function(mutations)
+	magazineViewObserver : new MutationObserver(function(mutations)
 	{
 		if (findAddedNode(mutations, function(n) { var a = $(n); return a.hasClass('u4Entry') || a.hasClass('topRecommendedEntry');}))
 		{
@@ -53,20 +59,23 @@ settings['feedlyplus_markprevious'] =
 				event.stopPropagation();
 				
 				var article = $(event.target).closest('div.u4Entry, div.topRecommendedEntry');
-				settings['feedlyplus_markprevious'].markPreviousAs(true, article.data('actionable'), function()
+				
+				var callbackStack = [];
+				callbackStack.push(function()
 				{
 					//Close any sliders as it interferes.  Magazine view featured articles have sliders.
 					if ($('div.floatingEntryOverlay').length > 0)
 					{
 						clickArticle(getArticleById($('div.floatingEntryScroller div.u100Entry').data('entryid')));
 					}
-				
-					//Open and close the article because in magazine view we mark the current as read too.
-					clickArticle(article);
-					clickArticle(article);
-					
-					settings['feedlyplus_markprevious'].unlock();
 				});
+				
+				//Open and close the article because in magazine view we mark the current as read too.
+				callbackStack.push(function() {clickArticle(article);});
+				callbackStack.push(function() {clickArticle(article);});
+				callbackStack.push(function() {settings['feedlyplus_markprevious'].unlock();});
+					
+				settings['feedlyplus_markprevious'].markPreviousAs(true, article.data('actionable'), callbackStack);
 			});
 			
 			//Need to change the overflow style because a lot of times the source and author names are already
@@ -76,6 +85,31 @@ settings['feedlyplus_markprevious'] =
 			
 			//Make sure the mark previous span hasn't already been added.
 			$('div.metadata .wikiBar:not(:has(span#magMarkPrevious))').append('<span style="color:#CFCFCF">&nbsp;//&nbsp;</span>').append(spn);
+		}
+	}),
+	cardsViewObserver : new MutationObserver(function(mutations)
+	{
+		if (findAddedNode(mutations, function(n) { var a = $(n); return a.hasClass('u5Entry') || a.hasClass('topRecommendedEntry');}))
+		{
+			var spn = $('<span class="action" id="cardMarkPrevious" title="mark previous as read">mark previous as read</span>');
+			spn.click(function(event) 
+			{
+				event.stopPropagation();
+				
+				var article = $(event.target).closest('div.u5Entry, div.topRecommendedEntry');
+
+				var callbackStack = [];
+				
+				//Mark the clicked on article as read too.
+				callbackStack.push(function() {	clickArticle(article); });
+				
+				callbackStack.push(function() {	settings['feedlyplus_markprevious'].unlock(); });
+					
+				settings['feedlyplus_markprevious'].markPreviousAs(true, article.data('actionable'), callbackStack);
+			});
+			
+			//Make sure the mark previous span hasn't already been added.
+			$('div.u5Entry div.wikiBar:not(:has(span#cardMarkPrevious))').append('<br/>').append(spn);
 		}
 	}),
 
@@ -121,18 +155,21 @@ settings['feedlyplus_markprevious'] =
 		var span = $('<span class="action">' + markLabel + '</span>');
 		span.click(function()
 		{
-			settings['feedlyplus_markprevious'].markPreviousAs($(this).text().indexOf('undo') != 0, articleId, function ()
+			var callbackStack = [];
+			callbackStack.push(function ()
 			{
 				//Go back and expand the original.
 				clickArticle(getArticleById(articleId));
 			});
+
+			settings['feedlyplus_markprevious'].markPreviousAs($(this).text().indexOf('undo') != 0, articleId, callbackStack);
 		});
 		
 		var wrapper = $('<span id="feedlyplus_markpreviouslink"> &nbsp;//&nbsp; </span>');
 		wrapper.append(span);
 		openArticle.find('div.entryHeader div.metadata').append(wrapper);
 	},
-	markPreviousAs : function(read, articleId, callback)
+	markPreviousAs : function(read, articleId, callbackStack)
 	{
 		var scrollPos = $(document).scrollTop();
 		
@@ -150,25 +187,24 @@ settings['feedlyplus_markprevious'] =
 			
 			sett.lock(read, articleId);
 			
-			if (read)
+			if (!callbackStack)
 			{
-				markAsRead(previous);
-				sett.undoArticles = previous;
+				callbackStack = [];
 			}
-			else
-			{
-				markAsUnread(previous);
-			}
-			
-			if (callback)
-			{
-				callback();
-			}
-			
-			modal.remove();
-			
-			$(document).scrollTop(scrollPos);
 
+			callbackStack.push(function()
+			{
+				if (read)
+				{
+					sett.undoArticles = previous;
+				}
+
+				modal.remove();
+				
+				$(document).scrollTop(scrollPos);
+			});
+
+			markAs(previous, read, callbackStack);
 		}, delay);
 	},
 	markReadStatus : {lock : false, read : null, id : ''},
