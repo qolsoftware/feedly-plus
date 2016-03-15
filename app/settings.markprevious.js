@@ -124,7 +124,7 @@ settings['feedlyplus_markprevious'] =
 		{
 			return;
 		}
-		
+
 		//Check if we are in the middle of a mark transaction.
 		if (markReadStatus.lock)
 		{
@@ -164,10 +164,15 @@ settings['feedlyplus_markprevious'] =
 
 			settings['feedlyplus_markprevious'].markPreviousAs($(this).text().indexOf('undo') != 0, articleId, callbackStack);
 		});
-		
+
 		var wrapper = $('<span id="feedlyplus_markpreviouslink"> &nbsp;//&nbsp; </span>');
 		wrapper.append(span);
-		openArticle.find('div.entryHeader div.metadata').append(wrapper);
+
+		//Need to set delay because Feedly changed something again that causes a timing issue.
+		setTimeout(function()
+		{
+			openArticle.find('div.entryHeader div.metadata').append(wrapper);
+		}, 1);
 	},
 	markPreviousAs : function(read, articleId, callbackStack)
 	{
