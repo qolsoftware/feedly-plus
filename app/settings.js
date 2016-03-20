@@ -99,7 +99,7 @@ settings['feedlyplus_boldcat'] =
 	order : 1,
 	apply : function()
 	{
-		insertCss(this.id, '#feedlyTabs div.emptyAware:not(.primary), #feedlyTabsHolder div.staticSimpleUnreadCount { font-weight:bold!important; }');
+		insertCss(this.id, '#feedlyTabs div.emptyAware:not(.primary), #feedlyTabsHolder div.simpleUnreadCount { font-weight:bold!important; }');
 	},
 	revert : function()
 	{
@@ -116,7 +116,7 @@ settings['feedlyplus_blackcat'] =
 	order : 1,
 	apply : function()
 	{
-		insertCss(this.id, '#feedlyTabs div.emptyAware:not(.primary), #feedlyTabsHolder div.staticSimpleUnreadCount { color:black!important; opacity:1!important; }');
+		insertCss(this.id, '#feedlyTabs div.emptyAware:not(.primary), #feedlyTabsHolder div.simpleUnreadCount { color:black!important; opacity:1!important; }');
 	},
 	revert : function()
 	{

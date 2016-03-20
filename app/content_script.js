@@ -6,7 +6,7 @@ function startVolatileSettingsObserver()
 	//Volatile settings need to added after the page has fully rendered.
     var observer = new MutationObserver(function(mutations)
 	{
-		if ($('.staticSimpleUnreadCount').length > 0)
+		if ($('.simpleUnreadCount').length > 0)
 		{
 			applySettings(true, true);
 			observer.disconnect();
