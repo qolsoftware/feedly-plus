@@ -10,7 +10,7 @@ settings['feedlyplus_markprevious'] =
 	apply : function()
 	{
 		document.addEventListener('keypress', this.handleKeyPress);
-		this.titleViewObserver.observe(document.querySelector('#feedlyPart0'), {childList : true, subtree : true});
+		this.titleViewObserver.observe(document.querySelector('#feedlyPageFX'), {childList : true, subtree : true});
 		this.magazineViewObserver.observe(document.querySelector('#feedlyPart0'), {childList : true, subtree : true});
 		this.cardsViewObserver.observe(document.querySelector('#feedlyPart0'), {childList : true, subtree : true});
 		this.createArticleMarkPreviousLink();
@@ -44,7 +44,7 @@ settings['feedlyplus_markprevious'] =
 	},
 	titleViewObserver : new MutationObserver(function(mutations)
 	{
-		if (findAddedNode(mutations, function(n) { return n.id && n.id.match("_inlineframe$");}) != null)
+		if (findAddedNode(mutations, function(n) { var a = $(n); return a.hasClass('u100Header')}))
 		{
 			settings['feedlyplus_markprevious'].createArticleMarkPreviousLink();
 		}
@@ -119,7 +119,7 @@ settings['feedlyplus_markprevious'] =
 		var openArticle = getOpenArticle();
 		var articleId = openArticle.getArticleId();
 		var markLabel = 'mark previous as read';
-		
+
 		if (openArticle.length == 0)
 		{
 			return;
@@ -127,7 +127,7 @@ settings['feedlyplus_markprevious'] =
 
 		//Check if we are in the middle of a mark transaction.
 		if (markReadStatus.lock)
-		{
+		{		
 			//The original article is showing so end the transaction.
 			if (markReadStatus.id == articleId)
 			{
@@ -135,7 +135,7 @@ settings['feedlyplus_markprevious'] =
 				this.unlock();
 			}
 			else
-			{
+			{		
 				//No need to render anything since we are in a transaction and thus clicking
 				//through potentially hundreds of items.
 				return;
@@ -151,7 +151,7 @@ settings['feedlyplus_markprevious'] =
 			//Free up memory since a new article has opened.
 			this.undoArticles = null;
 		}
-	
+
 		var span = $('<span class="action">' + markLabel + '</span>');
 		span.click(function()
 		{

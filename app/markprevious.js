@@ -2,28 +2,24 @@
 
 function getArticleById(id)
 {
-	return $('#mainArea').find('div.u4Entry, div.u0Entry, div.topRecommendedEntry').filter(function(index, element) 
-	{
-		return $(element).data('actionable') == id;
-	});
+	return $("div.u0[data-entryid='" + id + "']");
 }
 
 function getPreviousUnread(articleId)
 {
 	var article = getArticleById(articleId);
-	var unreadSelector = 'a.title.unread';
-	
+
 	var stop = false;
-	var previous = $('div#mainArea div.u4Entry, div#mainArea div.u5Entry, div#mainArea div.u0Entry, div#mainArea div.topRecommendedEntry').filter(function(index, element)
+	var previous = $('div.u0').filter(function(index, element)
 	{
 		var jElem = $(element);
 
-		if (jElem.data('actionable') == articleId)
+		if (jElem.data('uninlineentryid') == articleId)
 		{
 			//Found the clicked element so reject all subsequent siblings.
 			stop = true;
 		}
-		else if (jElem.find(unreadSelector).length == 0)
+		else if (jElem.hasClass('read'))
 		{
 			//Make sure it hasn't already been read.  The reason we need to do this
 			//here, instead of the above filter selector, is because the user could
@@ -56,7 +52,7 @@ function markAs(articles, read, callbackStack)
 	
 	//2016-02-29 - Feedly or maybe even Chrome  made an update where clicking the article was happening
 	//too fast and not registering the events.  So here we add a 1 millisecond delay.
-	var timeIncrement = 1;
+	var timeIncrement = 5;
 
 	articles.each(function()
 	{
@@ -100,17 +96,17 @@ function markAs(articles, read, callbackStack)
 
 function getCurrentView()
 {
-	var timeline = $('#timeline');
-	
-	if (timeline.hasClass('u0EntryList'))
+	var board = $('.board');
+
+	if (board.hasClass('presentation-0'))
 	{
 		return 'title';
 	}
-	else if (timeline.hasClass('u4EntryList'))
+	else if (board.hasClass('presentation-4'))
 	{
 		return 'magazine';
 	}
-	else if (timeline.hasClass('u5EntryList'))
+	else if (board.hasClass('presentation-5'))
 	{
 		return 'cards';
 	}
@@ -123,7 +119,7 @@ function clickArticle(element, view)
 	{
 		view = getCurrentView();
 	}
-	
+console.log('View: ' + view + ", id: " + element.attr('id'));
 	if (view == 'cards')
 	{
 		var anchor = element.find("a.unread:first");
@@ -151,7 +147,7 @@ function sleepFor( sleepDuration )
 
 function getOpenArticle()
 {
-	var openArticle = $('div.inlineFrame');
+	var openArticle = $('div.inlineFrame.selected.u0');
 	openArticle.getArticleId = function()
 	{
 		return this.data('uninlineentryid');

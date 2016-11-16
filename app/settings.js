@@ -66,6 +66,7 @@ function findAddedNode(mutations, isMatch)
 			for (var i=0; i<mutation.addedNodes.length; i++)
 			{
 				var addedNode = mutation.addedNodes[i];
+
 				if (isMatch(addedNode))
 				{
 					match = addedNode;
@@ -93,8 +94,8 @@ settings = {};
 settings['feedlyplus_boldcat'] =
 {
 	id : 'feedlyplus_boldcat',
-	label : 'Bold categories & counts',
-	description : 'Bold categories on left for easier reading.',
+	label : 'Bold counts',
+	description : 'Bold counts on left for easier reading.',
 	volatile : false,
 	order : 1,
 	apply : function()
@@ -164,10 +165,10 @@ settings['feedlyplus_articlesleft'] =
 	apply : function()
 	{
 		//For Title view articles.
-		insertCss(this.id, 'div.condensed div.inlineFrame div.u100Entry { margin-left:0px; }');
+		insertCss(this.id, '.fx .inlineFrame.u0 .u100Entry { margin-left:0; }');
 		
 		//For Magazine view articles.
-		insertCss(this.id, 'div#mainBar { margin-left:0px; }');
+		insertCss(this.id, '.fx .container { margin-left:0; }');
 	},
 	revert : function()
 	{
@@ -248,9 +249,9 @@ settings['feedlyplus_4cards'] =
 	}),
 	insert4Columns : function()
 	{
-		if (document.querySelector("#mainArea .u5EntryList"))
+		if (document.querySelector(".presentation-5"))
 		{
-			insertCss(this.id, '#feedlyPage {width:1200px !important;}');
+			insertCss(this.id, '#feedlyPageFX {width:1200px !important;}');
 		}
 	}
 };
