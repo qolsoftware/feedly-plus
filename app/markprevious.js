@@ -5,16 +5,22 @@ function getArticleById(id)
 	return $("div.u0[data-entryid='" + id + "']");
 }
 
+function getArticleId(article)
+{
+	var id = article.attr('id');
+	return id.substr(0, id.length - "_main".length);
+}
+
 function getPreviousUnread(articleId)
 {
 	var article = getArticleById(articleId);
 
 	var stop = false;
-	var previous = $('div.u0').filter(function(index, element)
+	var previous = $('div.u0, div.u4').filter(function(index, element)
 	{
 		var jElem = $(element);
 
-		if (jElem.data('uninlineentryid') == articleId)
+		if (getArticleId(jElem) == articleId)
 		{
 			//Found the clicked element so reject all subsequent siblings.
 			stop = true;
@@ -85,7 +91,7 @@ function markAs(articles, read, callbackStack)
 	
 	if (callbackStack)
 	{
-		while((c = callbackStack.pop()) != null)
+		while((c = callbackStack.shift()) != null)
 		{
 			time += timeIncrement;
 			setTimeout(c, time);
@@ -119,7 +125,7 @@ function clickArticle(element, view)
 	{
 		view = getCurrentView();
 	}
-console.log('View: ' + view + ", id: " + element.attr('id'));
+
 	if (view == 'cards')
 	{
 		var anchor = element.find("a.unread:first");

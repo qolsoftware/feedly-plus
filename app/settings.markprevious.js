@@ -11,8 +11,8 @@ settings['feedlyplus_markprevious'] =
 	{
 		document.addEventListener('keypress', this.handleKeyPress);
 		this.titleViewObserver.observe(document.querySelector('#feedlyPageFX'), {childList : true, subtree : true});
-		this.magazineViewObserver.observe(document.querySelector('#feedlyPart0'), {childList : true, subtree : true});
-		this.cardsViewObserver.observe(document.querySelector('#feedlyPart0'), {childList : true, subtree : true});
+		this.magazineViewObserver.observe(document.querySelector('#feedlyPageFX'), {childList : true, subtree : true});
+		this.cardsViewObserver.observe(document.querySelector('#feedlyPageFX'), {childList : true, subtree : true});
 		this.createArticleMarkPreviousLink();
 		
 		insertCss(this.id, 'div.u5Entry { height:auto!important; }');
@@ -51,40 +51,40 @@ settings['feedlyplus_markprevious'] =
 	}),
 	magazineViewObserver : new MutationObserver(function(mutations)
 	{
-		if (findAddedNode(mutations, function(n) { var a = $(n); return a.hasClass('u4Entry') || a.hasClass('topRecommendedEntry');}))
+		if ($('div.u4').length > 0)
 		{
 			var spn = $('<span class="action" id="magMarkPrevious" title="mark previous as read">mark previous as read</span>');
 			spn.click(function(event) 
 			{
 				event.stopPropagation();
-				
-				var article = $(event.target).closest('div.u4Entry, div.topRecommendedEntry');
-				
+
+				var article = $(event.target).closest('div.u4');
+
 				var callbackStack = [];
-				callbackStack.push(function()
-				{
-					//Close any sliders as it interferes.  Magazine view featured articles have sliders.
-					if ($('div.floatingEntryOverlay').length > 0)
-					{
-						clickArticle(getArticleById($('div.floatingEntryScroller div.u100Entry').data('entryid')));
-					}
-				});
 				
 				//Open and close the article because in magazine view we mark the current as read too.
 				callbackStack.push(function() {clickArticle(article);});
-				callbackStack.push(function() {clickArticle(article);});
+
+				if ($('div.frameActionsTop').length == 0)
+				{
+
+					callbackStack.push(function() { 
+										
+					$('div.frameActionsTop').click();});
+				}
+				
 				callbackStack.push(function() {settings['feedlyplus_markprevious'].unlock();});
-					
-				settings['feedlyplus_markprevious'].markPreviousAs(true, article.data('actionable'), callbackStack);
+
+				settings['feedlyplus_markprevious'].markPreviousAs(true, getArticleId(article), callbackStack);
 			});
 			
 			//Need to change the overflow style because a lot of times the source and author names are already
 			//so long that the mark previous gets cut off if the overflow is hidden.  This can't be done in CSS
 			//because the style is right on the element itself.
 			$('div.metadata').css('overflow', 'visible');
-			
+
 			//Make sure the mark previous span hasn't already been added.
-			$('div.metadata .wikiBar:not(:has(span#magMarkPrevious))').append('<span style="color:#CFCFCF">&nbsp;//&nbsp;</span>').append(spn);
+			$('div.metadata:not(:has(span#magMarkPrevious))').append('<span style="color:#CFCFCF">&nbsp;//&nbsp;</span>').append(spn);
 		}
 	}),
 	cardsViewObserver : new MutationObserver(function(mutations)
