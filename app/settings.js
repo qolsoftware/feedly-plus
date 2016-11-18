@@ -234,25 +234,14 @@ settings['feedlyplus_4cards'] =
 	order : 12,
 	apply : function()
 	{
-		this.insert4Columns();
-
-		this.mutationObserver.observe(document.querySelector('#feedlyPart0'), {childList : true, subtree : true});
+		var css = '.fx .entry.u5:nth-child(3n+1) { clear:none; }';
+		css += '.fx .entry.u5:nth-child(4n+1) { clear:left; }';
+		css += 'div.list-entries { width:1200px; }';
+		insertCss(this.id, css);
 	},
 	revert : function()
 	{
 		removeStyle(this.id);
-		this.mutationObserver.disconnect();
-	},
-	mutationObserver : new MutationObserver(function(mutations)
-	{
-		settings['feedlyplus_4cards'].insert4Columns();
-	}),
-	insert4Columns : function()
-	{
-		if (document.querySelector(".presentation-5"))
-		{
-			insertCss(this.id, '#feedlyPageFX {width:1200px !important;}');
-		}
 	}
 };
 

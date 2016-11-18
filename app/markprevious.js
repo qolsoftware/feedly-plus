@@ -16,7 +16,7 @@ function getPreviousUnread(articleId)
 	var article = getArticleById(articleId);
 
 	var stop = false;
-	var previous = $('div.u0, div.u4').filter(function(index, element)
+	var previous = $('div.u0, div.u4, div.u5').filter(function(index, element)
 	{
 		var jElem = $(element);
 
@@ -125,22 +125,15 @@ function clickArticle(element, view)
 	{
 		view = getCurrentView();
 	}
+	
+	if (view == 'magazine' || view == 'cards')
+	{
+		element.find('button.mark-as-read:first').click();
+		return;
+	}
 
-	if (view == 'cards')
-	{
-		var anchor = element.find("a.unread:first");
-		
-		//To get around something in Feedly (like React.js?) we have to first inject a span
-		//and then click the span.  Otherwise we can't programmatically click the anchor.
-		var tempSpan = $('<span></span>');
-		anchor.prepend(tempSpan);		
-		tempSpan.click();
-	}
-	else
-	{
-		//console.log('**** Clicking: ' + element.find('span:first'));
-		element.find('span:first').trigger('click');
-	}
+	//console.log('**** Clicking: ' + element.find('span:first'));
+	element.find('span:first').trigger('click');
 }
 
 

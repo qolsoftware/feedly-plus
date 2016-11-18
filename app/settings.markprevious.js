@@ -15,7 +15,9 @@ settings['feedlyplus_markprevious'] =
 		this.cardsViewObserver.observe(document.querySelector('#feedlyPageFX'), {childList : true, subtree : true});
 		this.createArticleMarkPreviousLink();
 		
-		insertCss(this.id, 'div.u5Entry { height:auto!important; }');
+		//insertCss(this.id, 'div.u5Entry { height:auto!important; }');
+		insertCss(this.id +"_cardMarkPrevious", 'button.cardMarkPrevious {background-color:transparent;float:right;padding:0;margin-right:1rem;margin-top:.5rem;color:#fff;text-transform:lowercase;width:300px;text-align:right;font-weight:normal;opacity:0.8;}');
+		insertCss(this.id +"_cardMarkPrevious_hover", 'button.cardMarkPrevious:hover {opacity:1;}');
 	},
 	revert : function()
 	{
@@ -25,7 +27,8 @@ settings['feedlyplus_markprevious'] =
 		this.cardsViewObserver.disconnect();
 		$('#feedlyplus_markpreviouslink').remove();
 		
-		removeStyle(this.id);
+		removeStyle(this.id +"_cardMarkPrevious");
+		removeStyle(this.id +"_cardMarkPrevious_hover");
 	},
 	handleKeyPress : function(e)
 	{
@@ -64,14 +67,6 @@ settings['feedlyplus_markprevious'] =
 				
 				//Open and close the article because in magazine view we mark the current as read too.
 				callbackStack.push(function() {clickArticle(article);});
-
-				if ($('div.frameActionsTop').length == 0)
-				{
-
-					callbackStack.push(function() { 
-										
-					$('div.frameActionsTop').click();});
-				}
 				
 				callbackStack.push(function() {settings['feedlyplus_markprevious'].unlock();});
 
@@ -89,14 +84,14 @@ settings['feedlyplus_markprevious'] =
 	}),
 	cardsViewObserver : new MutationObserver(function(mutations)
 	{
-		if (findAddedNode(mutations, function(n) { var a = $(n); return a.hasClass('u5Entry') || a.hasClass('topRecommendedEntry');}))
+		if ($('div.u5').length > 0)
 		{
-			var spn = $('<span class="action" id="cardMarkPrevious" title="mark previous as read">mark previous as read</span>');
-			spn.click(function(event) 
+			var butt = $('<button class="cardMarkPrevious" title="Mark previous as read">mark previous as read</button>');
+			butt.click(function(event) 
 			{
 				event.stopPropagation();
 				
-				var article = $(event.target).closest('div.u5Entry, div.topRecommendedEntry');
+				var article = $(event.target).closest('div.u5');
 
 				var callbackStack = [];
 				
@@ -104,12 +99,12 @@ settings['feedlyplus_markprevious'] =
 				callbackStack.push(function() {	clickArticle(article); });
 				
 				callbackStack.push(function() {	settings['feedlyplus_markprevious'].unlock(); });
-					
-				settings['feedlyplus_markprevious'].markPreviousAs(true, article.data('actionable'), callbackStack);
+				
+				settings['feedlyplus_markprevious'].markPreviousAs(true, getArticleId(article), callbackStack);
 			});
 			
 			//Make sure the mark previous span hasn't already been added.
-			$('div.u5Entry div.wikiBar:not(:has(span#cardMarkPrevious))').append('<br/>').append(spn);
+			$('div.u5 div.visual-overlay:not(:has(button.cardMarkPrevious))').append(butt);
 		}
 	}),
 
