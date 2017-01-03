@@ -42,12 +42,14 @@ settings['feedlyplus_markprevious'] =
 		var openArticle = getOpenArticle();
 		if (e.shiftKey && String.fromCharCode(e.charCode||e.which).toLowerCase() == 'w' && openArticle.length > 0 && canMarkPreviousAsRead(openArticle.getArticleId()))
 		{
-			$('#feedlyplus_markpreviouslink .action').click();
+			//Search for 'mark previous as read' text because title view and magazine view use different id's for the anchor links
+			openArticle.find(":contains('mark previous as read')").click();
 		}
 	},
 	titleViewObserver : new MutationObserver(function(mutations)
 	{
-		if (findAddedNode(mutations, function(n) { var a = $(n); return a.hasClass('u100Header')}))
+		var oa = getOpenArticle();
+		if (oa.length > 0 && oa.hasClass('u0'))
 		{
 			settings['feedlyplus_markprevious'].createArticleMarkPreviousLink();
 		}
@@ -79,7 +81,7 @@ settings['feedlyplus_markprevious'] =
 			$('div.metadata').css('overflow', 'visible');
 
 			//Make sure the mark previous span hasn't already been added.
-			$('div.metadata:not(:has(span#magMarkPrevious))').append('<span style="color:#CFCFCF">&nbsp;//&nbsp;</span>').append(spn);
+			$('div.metadata').not(':has(span#magMarkPrevious)').not(':has(span#feedlyplus_markpreviouslink)').append('<span style="color:#CFCFCF">&nbsp;//&nbsp;</span>').append(spn);
 		}
 	}),
 	cardsViewObserver : new MutationObserver(function(mutations)
@@ -166,7 +168,10 @@ settings['feedlyplus_markprevious'] =
 		//Need to set delay because Feedly changed something again that causes a timing issue.
 		setTimeout(function()
 		{
-			openArticle.find('div.entryHeader div.metadata').append(wrapper);
+			if ($('#feedlyplus_markpreviouslink').length == 0)
+			{
+				openArticle.find('div.entryHeader div.metadata').append(wrapper);
+			}
 		}, 1);
 	},
 	markPreviousAs : function(read, articleId, callbackStack)

@@ -146,7 +146,7 @@ function sleepFor( sleepDuration )
 
 function getOpenArticle()
 {
-	var openArticle = $('div.inlineFrame.selected.u0');
+	var openArticle = $('div.inlineFrame.selected.u0, div.inlineFrame.selected.u4');
 	openArticle.getArticleId = function()
 	{
 		return this.data('uninlineentryid');
