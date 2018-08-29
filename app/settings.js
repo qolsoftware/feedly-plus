@@ -252,7 +252,7 @@ countPublisher =
 	{
 		if (this.names.length == 0)
 		{
-			this.mutationObserver.observe(document.querySelector('#latesttab').parentNode, {childList : true, subtree : true, characterData : true, characterDataOldValue : true});
+			this.mutationObserver.observe(document.querySelector('#latesttab_header').parentNode, {childList : true, subtree : true, characterData : true, characterDataOldValue : true});
 			$(document).on("markPrevious", this.markPreviousListener);	
 		}
 		this.names.push(name);		
@@ -269,30 +269,13 @@ countPublisher =
 	},
 	mutationObserver : new MutationObserver(function(mutations)
 	{
-		if (countPublisher.markLock)
-		{
-			return;
-		}
-
-		var cats = [];
 		for (var i=0; i<mutations.length; i++)
 		{
 			var m = mutations[i];
-			if (!isNaN(parseFloat(m.oldValue)) && isFinite(m.oldValue) && m.target.parentElement.className == "categoryUnreadCount simpleUnreadCount")
-			{
-				var cat = m.target.parentElement.getAttribute("data-category");
 
-				if (cats.indexOf(cat) == -1)
-				{
-					cats.push(cat);
-					//console.log('*** countPublisher: ' + cat);
-					var oldValue = m.oldValue.trim();
-					var newValue = m.target.nodeValue;
-					if (oldValue != newValue)
-					{
-						chrome.runtime.sendMessage({command: "deltaBadgeText", delta: newValue - oldValue});
-					}
-				}
+			if (m.target.className.indexOf("categoryUnreadCount simpleUnreadCount") != -1)
+			{
+				chrome.runtime.sendMessage({command: "setBadgeText", value: m.target.textContent});
 			}
 		}
 	}),

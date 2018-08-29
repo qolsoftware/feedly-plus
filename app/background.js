@@ -7,7 +7,8 @@ function setFeedlyAccessToken(details)
 	for (var i=0; i<requestHeaders.length; i++)
 	{
 		var h = requestHeaders[i];
-		if (h.name === 'X-Feedly-Access-Token')
+
+		if (h.name === 'Authorization')
 		{
 			localStorage.setItem('oauth', h.value);
 			refreshBadgeText();
@@ -139,6 +140,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)
 	if (request.command == "deltaBadgeText")
 	{
 		setBadgeText(currentBadgeValue + parseInt(request.delta));
+	}
+	else if (request.command == "setBadgeText")
+	{
+		setBadgeText(parseInt(request.value));
 	}
 	else if (request.command == 'refreshBadgeText')
 	{
