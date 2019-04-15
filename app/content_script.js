@@ -22,13 +22,13 @@ function startLoginObserver()
 	//document body childList observations so this is should have no performance impact.
     var observer = new MutationObserver(function(mutations)
 	{
-		if ($('.categoryUnreadCount').length == 0 && loggedIn)
+		if ($('.streamUnreadCount').length == 0 && loggedIn)
 		{
 			//We just logged out so disable the volatile observers.
 			loggedIn = false;
 			applySettings(true, false);
 		}
-		else if ($('.categoryUnreadCount').length > 0 && !loggedIn)
+		else if ($('.streamUnreadCount').length > 0 && !loggedIn)
 		{
 			//We just logged in.
 			loggedIn = true;
