@@ -121,7 +121,7 @@ function refreshBadgeText()
 
 //This listener never gets removed because we want the stored token to change
 //in incognito mode or when the user logs out.
-chrome.webRequest.onBeforeSendHeaders.addListener(setFeedlyAccessToken, {urls: ['*://feedly.com/v3/subscriptions*']}, ['requestHeaders']);
+chrome.webRequest.onBeforeSendHeaders.addListener(setFeedlyAccessToken, {urls: ['*://feedly.com/v3/streams/content*']}, ['requestHeaders']);
 
 chrome.alarms.onAlarm.addListener(function(alarm)
 {
