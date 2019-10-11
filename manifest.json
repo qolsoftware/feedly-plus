@@ -38,6 +38,6 @@
 	"http://feedly.com/*",
 	"https://feedly.com/*"
   ],
-  "version": "0.3.10",
+  "version": "0.3.11",
   "web_accessible_resources": ["app/loading.gif"]
 }

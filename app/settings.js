@@ -20,7 +20,7 @@ function toggleSetting(id, value)
 	{
 		s.apply();
 	}
-	else
+	else if (typeof s.revert === "function")
 	{
 		s.revert();
 	}
@@ -273,7 +273,7 @@ countPublisher =
 		{
 			var m = mutations[i];
 
-			if (m.target.className.indexOf("categoryUnreadCount simpleUnreadCount") != -1)
+			if (m.target.className.indexOf("LeftnavListRow__count") != -1)
 			{
 				chrome.runtime.sendMessage({command: "setBadgeText", value: m.target.textContent});
 			}

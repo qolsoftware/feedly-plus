@@ -59,7 +59,7 @@ settings['feedlyplus_removeCategoryCountLink'] =
 	order : 3,
 	apply : function()
 	{
-		insertCss(this.id, '#feedlyTabsHolder:hover div.simpleUnreadCount:hover { text-decoration: none; background-color: inherit; }');
+		insertCss(this.id, '#feedlyTabsHolder:hover div.LeftnavListRow__count:hover { text-decoration: none; background-color: inherit; }');
 		this.mutationObserver.observe(document.querySelector('#feedlyTabs'), {childList : true, subtree : true});
 		this.disableLinks();
 	},
@@ -67,7 +67,7 @@ settings['feedlyplus_removeCategoryCountLink'] =
 	{
 		removeStyle(this.id);
 		this.mutationObserver.disconnect();
-		$('.simpleUnreadCount').unbind('click');
+		$('.LeftnavListRow__count').unbind('click');
 	},
 	mutationObserver : new MutationObserver(function(mutations)
 	{
@@ -76,7 +76,7 @@ settings['feedlyplus_removeCategoryCountLink'] =
 	disableLinks : function()
 	{
 		//Removes the link that lets you mark a category as read when you click on the unread count.
-		$('.simpleUnreadCount').each(function()
+		$('.LeftnavListRow__count').each(function()
 		{
 			$(this).bind('click', function()
 			{
