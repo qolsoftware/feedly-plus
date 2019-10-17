@@ -252,7 +252,7 @@ countPublisher =
 	{
 		if (this.names.length == 0)
 		{
-			this.mutationObserver.observe(document.querySelector('#latesttab_header').parentNode, {childList : true, subtree : true, characterData : true, characterDataOldValue : true});
+			this.mutationObserver.observe(document.querySelector('#feedlyChrome__leftnav-wrapper').parentNode, {childList : true, subtree : true, characterData : true, characterDataOldValue : true});
 			$(document).on("markPrevious", this.markPreviousListener);	
 		}
 		this.names.push(name);		
@@ -273,7 +273,7 @@ countPublisher =
 		{
 			var m = mutations[i];
 
-			if (m.target.className.indexOf("LeftnavListRow__count") != -1)
+			if (m.target.className.indexOf && m.target.className.indexOf("LeftnavListRow__count") != -1)
 			{
 				chrome.runtime.sendMessage({command: "setBadgeText", value: m.target.textContent});
 			}
